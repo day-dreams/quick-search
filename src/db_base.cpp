@@ -16,6 +16,8 @@ bool Entry::isFile() { return this->entry_type == Entry::FILE; }
 bool Entry::isEnd() { return this->entry_type == Entry::END; }
 
 bool Entry::operator>>(std::fstream &file) {
+  //  std::cout << "file flag in write entry:" << file.good() << '\n';
+
   switch (entry_type) {
   case Entry::DIRECTORY:
     file.put('\0' + 1);
@@ -27,6 +29,7 @@ bool Entry::operator>>(std::fstream &file) {
     file.put('\0' + 3);
     break;
   }
+  //  std::cout << "file flag in write entry:" << file.good() << '\n';
   if (file.bad() | !file.is_open() | file.eof())
     return false;
   else
@@ -43,7 +46,9 @@ bool Entry::operator<<(std::fstream &file) {
 Time::Time() { this->change_time = time(nullptr); }
 
 bool Time::operator<<(std::fstream &file) {
+  // std::cout << "direcotry flag in read time: " << file.good() << '\n';
   file.read((char *)&this->change_time, 4);
+  // std::cout << "direcotry flag in read time: " << file.good() << '\n';
   if (file)
     return true;
   else
@@ -51,16 +56,17 @@ bool Time::operator<<(std::fstream &file) {
 }
 
 bool Time::operator>>(std::fstream &file) {
+  // std::cout << "direcotry flag in write time: " << file.good() << '\n';
   file.write((char *)&this->change_time, 4);
+  // std::cout << "direcotry flag in write time: " << file.good() << '\n';
+
   if (file)
     return true;
   else
     return false;
 }
 
-Directory::Directory() : full_path(path_buffer) {
-  this->change_time.change_time = time(nullptr);
-}
+Directory::Directory() { this->change_time.change_time = time(nullptr); }
 
 Directory::Directory(time_t time, std::string &s) : full_path(s) {
   this->change_time.change_time = time;
@@ -68,7 +74,11 @@ Directory::Directory(time_t time, std::string &s) : full_path(s) {
 
 bool Directory::operator>>(std::fstream &file) {
   this->change_time >> file;
+  // std::cout << "file flag: " << file.good() << '\n';
   file << full_path;
+  file.put(' ');
+  // std::cout << "file flag: " << file.good() << '\n';
+
   if (file)
     return true;
   else
@@ -76,8 +86,11 @@ bool Directory::operator>>(std::fstream &file) {
 }
 
 bool Directory::operator<<(std::fstream &file) {
+  // std::cout << "direcotry flag: " << file.good() << '\n';
   this->change_time << file;
   file >> full_path;
+  file.get();
+  // std::cout << "direcotry flag: " << file.good() << '\n';
   if (file)
     return true;
   else
@@ -95,6 +108,8 @@ File::File() : filename(filename_buffer) {}
 
 bool File::operator<<(std::fstream &file) {
   file >> filename;
+  file.get();
+
   if (file)
     return true;
   else
@@ -103,6 +118,7 @@ bool File::operator<<(std::fstream &file) {
 
 bool File::operator>>(std::fstream &file) {
   file << filename;
+  file.put(' ');
   if (file)
     return true;
   else

@@ -10,19 +10,25 @@ private:
   std::fstream db_file;
 
 public:
-  /*构造函数，必须设定数据库路径;
-    默认路径则表明是读旧数据，设定路径则表明更新数据*/
-  QsDB(std::string db_path = custom_db_path);
+  QsDB();
+  QsDB(const QsDB &d) = delete;
+  QsDB operator=(const QsDB &d) = delete;
+
+  /*打开数据库文件，默认路径为现有数据库*/
+  bool open(std::string db_path = custom_db_path);
+
+  /*初始化新数据库,写入magic number*/
+  bool init_new_db();
 
   /*获取+写入entry*/
   Entry getEntry();
-  bool writeEntry(const Entry &entry);
+  bool writeEntry(Entry &entry);
 
   /*获取+写入directory*/
   Directory getDirectory();
-  bool writeDirectory(const Directory &direcotry);
+  bool writeDirectory(Directory &direcotry);
 
   /*获取+写入file*/
   File getFile();
-  bool writeFile(const File &file);
+  bool writeFile(File &file);
 };

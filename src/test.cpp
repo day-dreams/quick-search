@@ -1,4 +1,5 @@
 #include "test.h"
+#include "db.h"
 #include "db_base.h"
 #include <fstream>
 #include <iomanip>
@@ -53,5 +54,42 @@ void test_filename() {
     file.open("test.txt", fstream::in | fstream::binary);
     filename << file;
     std::cout << "reading filaname: " << filename.filename << '\n';
+  }
+}
+
+void test_db() {
+  {
+    QsDB db;
+    db.open();
+    Entry entry;
+    entry.entry_type = Entry::DIRECTORY;
+    Directory dir;
+    dir.change_time.change_time = 0x1234;
+    dir.full_path = "random-path";
+    db.writeEntry(entry);
+    db.writeDirectory(dir);
+    dir.change_time.change_time = 0x4321;
+    dir.full_path = "random-forest";
+    db.writeEntry(entry);
+    db.writeDirectory(dir);
+    File file;
+    file.filename = "helloworld.txt";
+    db.writeFile(file);
+  }
+  {
+    QsDB db;
+    db.open();
+    Entry entry;
+    entry = db.getEntry();
+    std::cout << "entry type: " << setbase(16) << (int)entry.entry_type << '\n';
+    auto dir = db.getDirectory();
+    std::cout << "directory time: " << dir.change_time.change_time << '\n';
+    std::cout << "directory path: " << dir.full_path << '\n';
+    entry = db.getEntry();
+    auto d = db.getDirectory();
+    std::cout << "directory time: " << d.change_time.change_time << '\n';
+    std::cout << "directory path: " << d.full_path << '\n';
+    auto file = db.getFile();
+    std::cout << "file          : " << file.filename << '\n';
   }
 }

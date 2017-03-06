@@ -26,8 +26,8 @@ public:
   uint8_t entry_type = 0;
 
   Entry();
-  Entry(const Entry &) = delete;
-  Entry &operator=(const Entry &) = delete;
+  // Entry(const Entry &) = delete;
+  // Entry &operator=(const Entry &) = delete;
 
   /*类型判断*/
   bool isDirectory();
@@ -46,9 +46,9 @@ public:
   uint32_t change_time = 0;
 
   Time();
-  Time(const Time &t) = delete;
-  Time &operator=(const Time &t) = delete;
-
+  // Time(const Time &t) = delete;
+  // Time &operator=(const Time &t) = delete;
+  //
   /*从文件中读取*/
   bool operator<<(std::fstream &file);
   /*写入到文件中*/
@@ -59,12 +59,12 @@ public:
 class Directory {
 public:
   Time change_time;
-  std::string &full_path;
+  std::string &full_path = path_buffer;
 
   Directory();
   Directory(time_t time, std::string &s);
-  Directory(const Directory &d) = delete;
-  Directory operator=(const Directory &d) = delete;
+  // Directory(const Directory &d) = delete;
+  // Directory operator=(const Directory &d) = delete;
 
   /*写入到文件*/
   bool operator>>(std::fstream &file);
@@ -80,8 +80,8 @@ public:
   std::string &filename;
 
   File();
-  File(const File &f) = delete;
-  File operator=(const File &f) = delete;
+  // File(const File &f) = delete;
+  // File operator=(const File &f) = delete;
 
   /*写入到文件*/
   bool operator>>(std::fstream &file);

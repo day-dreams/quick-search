@@ -11,5 +11,8 @@ aux_source_directory(./src DIR_SRCS)
 add_executable(qs src/main.cpp ${DIR_SRCS})
 #add_executable(test test/main.cpp ${DIR_SRCS})
 
+target_link_libraries(qs boost_filesystem)
+target_link_libraries(qs boost_system)
+
 # target_link_libraries(echo-server glog)
 # target_link_libraries(echo-server pthread)
