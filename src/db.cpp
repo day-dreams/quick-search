@@ -10,6 +10,8 @@ using namespace std;
 
 QsDB::QsDB() {}
 
+bool QsDB::db_end_reached() { return db_file.eof(); }
+
 bool QsDB::open(std::string db_path) {
   this->db_path = db_path;
   filesystem::path db(db_path);
@@ -31,7 +33,7 @@ bool QsDB::open(std::string db_path) {
 }
 
 bool QsDB::init_new_db() {
-  std::cout << "sizeof mn: " << sizeof(MAGIC_NUMBER) << '\n';
+  // std::cout << "sizeof mn: " << sizeof(MAGIC_NUMBER) << '\n';
   db_file.write((char *)&MAGIC_NUMBER, sizeof(MAGIC_NUMBER));
   if (db_file && db_file.is_open())
     return true;

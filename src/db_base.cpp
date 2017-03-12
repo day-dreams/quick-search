@@ -1,4 +1,5 @@
 #include "db_base.h"
+#include <boost/filesystem.hpp>
 #include <ctime>
 #include <iostream>
 
@@ -97,8 +98,9 @@ bool Directory::operator<<(std::fstream &file) {
     return false;
 }
 
-bool Directory::change_before(time_t another) {
-  if (this->change_time.change_time < another)
+bool Directory::changed() {
+  using namespace boost::filesystem;
+  if (this->change_time.change_time < last_write_time(path(this->full_path)))
     return true;
   else
     return false;

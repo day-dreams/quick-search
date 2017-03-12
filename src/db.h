@@ -14,6 +14,9 @@ public:
   QsDB(const QsDB &d) = delete;
   QsDB operator=(const QsDB &d) = delete;
 
+  /*判断数据库文件是否读取完毕*/
+  bool db_end_reached();
+
   /*打开数据库文件，默认路径为现有数据库*/
   bool open(std::string db_path = custom_db_path);
 

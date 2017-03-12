@@ -71,7 +71,7 @@ public:
   /*从文件中读取*/
   bool operator<<(std::fstream &file);
   /*比较时间先后*/
-  bool change_before(time_t time);
+  bool changed();
 };
 
 /*文件类型，在文件中表现为：文件名字符串*/
